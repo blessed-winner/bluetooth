@@ -1,14 +1,30 @@
 #include <SoftwareSerial.h>
-SoftwareSerial configBt(10, 11); // RX, TX
+
+SoftwareSerial BT(10, 11); // RX, TX
+int buttonPin = 7;
+bool lastState = HIGH; // because INPUT_PULLUP
+
 void setup() {
- Serial.begin(38400);
- configBt.begin(38400);
+  pinMode(buttonPin, INPUT_PULLUP);
+  Serial.begin(9600);
+  BT.begin(9600);
 }
+
 void loop() {
- if (configBt.available()) {
- Serial.print(configBt.readString());
- }
- if (Serial.available()) {
- configBt.write(Serial.read());
- }
+  bool buttonState = digitalRead(buttonPin);
+
+  // Detect button press (state change from HIGH → LOW)
+  if (lastState == HIGH && buttonState == LOW) {
+    BT.println("1"); // send '1' to slave to turn LED ON
+    Serial.println("Sent: 1");
+    delay(200); // debounce
+  }
+  // Optional: detect button release to send OFF
+  else if (lastState == LOW && buttonState == HIGH) {
+    BT.println("0"); // send '0' to slave to turn LED OFF
+    Serial.println("Sent: 0");
+    delay(200); // debounce
+  }
+
+  lastState = buttonState;
 }
