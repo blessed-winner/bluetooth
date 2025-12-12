@@ -6,8 +6,8 @@ bool lastState = HIGH; // because INPUT_PULLUP
 
 void setup() {
   pinMode(buttonPin, INPUT_PULLUP);
-  Serial.begin(9600);
-  BT.begin(9600);
+  Serial.begin(38400);
+  BT.begin(38400);
 }
 
 void loop() {
